@@ -3,12 +3,15 @@ Views for the movie APIs.
 """
 from django.shortcuts import render
 from django.http import HttpResponse
+from core.models import Movie
 
 
 def home(request):
     """Retrieve the values submited."""
     searchTerm = request.GET.get('searchMovie')
-    return render(request, 'home.html', {'searchTerm': searchTerm})
+    movies = Movie.objects.all()
+    return render(request, 'home.html',
+                  {'searchTerm': searchTerm, 'movies': movies})
 
 
 def about(request):
