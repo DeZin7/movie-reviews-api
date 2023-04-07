@@ -9,7 +9,10 @@ from core.models import Movie
 def home(request):
     """Retrieve the values submited."""
     searchTerm = request.GET.get('searchMovie')
-    movies = Movie.objects.all()
+    if searchTerm:
+        movies = Movie.objects.filter(title__icontains=searchTerm)
+    else:
+        movies = Movie.objects.all()
     return render(request, 'home.html',
                   {'searchTerm': searchTerm, 'movies': movies})
 
