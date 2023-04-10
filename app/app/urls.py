@@ -26,6 +26,7 @@ urlpatterns = [
     path('signup/', movieViews.signup, name='signup'),
     path('news/', include('news.urls')),
     path('movie/', include('movie.urls')),
+    path('accounts/', include('accounts.urls')),
 ]
 
 if settings.DEBUG:
