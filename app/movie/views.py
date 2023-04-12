@@ -8,7 +8,6 @@ from django.shortcuts import get_object_or_404, redirect
 from .forms import ReviewForm
 
 
-
 def home(request):
     """Retrieve the values submited."""
     searchTerm = request.GET.get('searchMovie')
@@ -37,7 +36,7 @@ def signup(request):
 def detail(request, movie_id):
     """Show movie details."""
     movie = get_object_or_404(Movie, pk=movie_id)
-    reviews = Review.objects.filter(movie = movie)
+    reviews = Review.objects.filter(movie=movie)
     return render(request, 'detail.html',
                   {'movie': movie, 'reviews': reviews})
 
@@ -62,3 +61,20 @@ def createreview(request, movie_id):
                           'createreview.html',
                           {'form': ReviewForm(), 'error':
                            'bad data passed in.'})
+
+
+def updatereview(request, review_id):
+    """Update a review."""
+    review = get_object_or_404(
+        Review, pk=review_id, user=request.user)
+    if request.method == 'GET':
+        form = ReviewForm(instance=review)
+        return render(request, 'updatereview.html',
+                      {'review': review, 'form': form})
+    else:
+        try:
+            form = ReviewForm(request.POST, instance=review)
+            form.save()
+            return redirect('detail', review.movie.id)
+        except ValueError:
+            return render(request, 'updatereview.html', {'review': review, 'form': form, 'error': 'Bad data in form'}) # noqa
